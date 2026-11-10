@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Чи я суб’єкт фінмоніторингу? — Перевірик</title>
+<meta name="description" content="Самоперевірка за 1 хвилину: чи ти суб’єкт фінмоніторингу і що треба зробити. Для бухгалтерів і ріелторів.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a href="./"><img class="logo-light" src="logo.svg" alt="Перевірик"><img class="logo-dark" src="logo-dark.svg" alt="Перевірик"></a>
+  <nav><a href="#how">Як це працює</a><a href="#price">Ціни</a><a class="btn small" href="check.html">Перевірити себе</a></nav>
+</header>
+
+<section class="hero">
+  <span class="pill">1 хвилина · дані не йдуть на сервер</span>
+  <h1>Чи я суб’єкт фінмоніторингу?</h1>
+  <p class="lead">П’ять питань — і персональний список: що зробити зараз, що щороку і що тобі не потрібно.</p>
+  <form id="f" class="noprint">
+    <div class="q"><p>Хто ти?</p><div class="opts">
+      <label><input type="radio" name="role" value="accountant" required> Бухгалтер</label>
+      <label><input type="radio" name="role" value="tax"> Податковий консультант</label>
+      <label><input type="radio" name="role" value="realtor"> Ріелтор</label>
+      <label><input type="radio" name="role" value="other"> Інше</label></div></div>
+    <div class="q"><p>Як ти працюєш з клієнтами?</p><div class="opts">
+      <label><input type="radio" name="work" value="contract" required> За договором (ФОП або фірма)</label>
+      <label><input type="radio" name="work" value="employment"> Я штатний працівник</label></div></div>
+    <div class="q" id="qDeals"><p>З якими угодами працюєш? <span class="muted small">(для ріелторів)</span></p><div class="opts">
+      <label><input type="radio" name="realtorDeals" value="sale"> Купівля-продаж</label>
+      <label><input type="radio" name="realtorDeals" value="rentHigh"> Оренда від 400 000 грн/міс</label>
+      <label><input type="radio" name="realtorDeals" value="rentLow"> Лише дешевша оренда</label></div></div>
+    <div class="q"><p>Ти працюєш сам чи як компанія?</p><div class="opts">
+      <label><input type="radio" name="form" value="fop" required> Одноосібно (ФОП)</label>
+      <label><input type="radio" name="form" value="company"> Юрособа (ТОВ тощо)</label></div></div>
+    <div class="q"><p>Ти вже на обліку в Держфінмоніторингу?</p><div class="opts">
+      <label><input type="radio" name="registered" value="yes" required> Так</label>
+      <label><input type="radio" name="registered" value="no"> Ні / не знаю</label></div></div>
+    <button class="btn" type="submit">Показати мої обов’язки</button>
+  </form>
+  <div id="out" class="result hidden"></div>
+</section>
+</div>
+<footer><div class="wrap">
+  <p><a href="privacy.html">Приватність</a><a href="terms.html">Умови</a><a class="js-mail" data-plan="Питання" href="#">Написати нам</a></p>
+  <p>Перевірик — інструмент-підказка, не юридична порада. Джерела: Закон України № 361-IX, Положення Мінфіну № 282 (наказ від 07.06.2024). © 2026</p>
+</div></footer>
+<script type="module">
+import { spfmCheck } from './core.js';
+const f = document.getElementById('f'), out = document.getElementById('out'), qd = document.getElementById('qDeals');
+const sync = () => { qd.classList.toggle('hidden', f.role.value !== 'realtor'); };
+f.addEventListener('change', sync); sync();
+const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+f.addEventListener('submit', e => {
+  e.preventDefault();
+  const a = { role: f.role.value, work: f.work.value, form: f.form.value, registered: f.registered.value === 'yes', realtorDeals: f.realtorDeals.value || 'sale' };
+  const r = spfmCheck(a);
+  let h = '<div class="card">';
+  if (!r.isSpfm) {
+    h += '<span class="level low">Схоже, ні</span><p style="margin-top:12px">' + esc(r.reason) + '</p>';
+  } else {
+    const dl = r.deadline2fm.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+    h += '<span class="level medium">Так, ти суб’єкт</span><p style="margin-top:12px">' + esc(r.reason) + '</p>';
+    h += '<p><strong>Найближчий звіт 2-фінмон: до ' + dl + '</strong> (залишилось днів: ' + r.daysTo2fm + ').</p>';
+    h += '<h3 style="margin-top:18px">Твій список</h3>';
+    r.duties.forEach((d, i) => {
+      const cls = d.urgent ? ' urgent' : d.relief ? ' relief' : '';
+      const ic = d.relief ? '✓' : d.urgent ? '!' : (i + 1);
+      h += '<div class="duty' + cls + '"><div class="ic">' + ic + '</div><div><strong>' + esc(d.title) + '</strong><p>' + esc(d.text) + '</p></div></div>';
+    });
+  }
+  h += '</div><div class="row noprint" style="margin-top:16px"><a class="btn" href="risk.html">Далі: ризик-профіль клієнта</a><button class="btn ghost" onclick="print()">Друк / PDF</button></div>';
+  h += '<p class="small muted">Підказка за текстом Закону № 361-IX, не юридична порада. Хочеш, щоб ми разом стали на облік і подали 2-фінмон? <a class="js-mail2" href="#">Залиш заявку «Встигни до 25 січня»</a>.</p>';
+  out.innerHTML = h; out.classList.remove('hidden');
+  const m = document.querySelector('.js-mail2'); m.className = 'js-mail'; m.dataset.plan = 'Встигни до 25 січня';
+  document.dispatchEvent(new Event('pv:mail'));
+  out.scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+<script src="contact.js"></script>
+</body>
+</html>

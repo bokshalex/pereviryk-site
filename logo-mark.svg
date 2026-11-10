@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Перевірик">
+<title>Перевірик</title>
+
+<path d="M20 106 V36 Q20 26 30 26 H50 L58 16 H90 Q100 16 100 26 V106" fill="none" stroke="#0E5C57" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M44 72 L56 84 L78 58" fill="none" stroke="#F2A541" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

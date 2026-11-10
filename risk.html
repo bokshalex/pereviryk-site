@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ризик-профіль клієнта — Перевірик</title>
+<meta name="description" content="12 питань — рівень ризику клієнта з поясненням і профіль для друку. Безкоштовно, у браузері.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a href="./"><img class="logo-light" src="logo.svg" alt="Перевірик"><img class="logo-dark" src="logo-dark.svg" alt="Перевірик"></a>
+  <nav><a href="#how">Як це працює</a><a href="#price">Ціни</a><a class="btn small" href="check.html">Перевірити себе</a></nav>
+</header>
+
+<section class="hero">
+  <span class="pill">2 хвилини · дані не йдуть на сервер</span>
+  <h1>Ризик-профіль клієнта</h1>
+  <p class="lead">Дванадцять питань «так / ні» — рівень ризику з поясненням, які заходи вжити, і профіль, готовий до друку.</p>
+  <form id="f" class="noprint">
+    <div class="q"><p>Клієнт <span class="muted small">(назва або ПІБ — залишиться лише на твоєму екрані)</span></p>
+      <input type="text" name="client" placeholder="ТОВ «Приклад» / Іваненко І. І." autocomplete="off">
+      <p style="margin-top:12px">ЄДРПОУ / РНОКПП <span class="muted small">(необов’язково)</span></p>
+      <input type="text" name="code" inputmode="numeric" autocomplete="off"></div>
+    <div id="qs"></div>
+    <button class="btn" type="submit">Скласти профіль</button>
+  </form>
+  <div id="out" class="result hidden"></div>
+</section>
+</div>
+<footer><div class="wrap">
+  <p><a href="privacy.html">Приватність</a><a href="terms.html">Умови</a><a class="js-mail" data-plan="Питання" href="#">Написати нам</a></p>
+  <p>Перевірик — інструмент-підказка, не юридична порада. Джерела: Закон України № 361-IX, Положення Мінфіну № 282 (наказ від 07.06.2024). © 2026</p>
+</div></footer>
+<script type="module">
+import { RISK_QUESTIONS, riskProfile } from './core.js';
+const qs = document.getElementById('qs'), f = document.getElementById('f'), out = document.getElementById('out');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+qs.innerHTML = RISK_QUESTIONS.map((q, i) => '<div class="q"><p>' + (i + 1) + '. ' + esc(q.q) + '</p><div class="opts">' +
+  '<label><input type="radio" name="' + q.id + '" value="no" required> Ні</label>' +
+  '<label><input type="radio" name="' + q.id + '" value="yes"> Так</label></div></div>').join('');
+f.addEventListener('submit', e => {
+  e.preventDefault();
+  const ans = {}; RISK_QUESTIONS.forEach(q => { ans[q.id] = f[q.id].value === 'yes'; });
+  const r = riskProfile(ans);
+  const date = new Date().toLocaleDateString('uk-UA');
+  const name = f.client.value.trim() || '—', code = f.code.value.trim() || '—';
+  let h = '<div class="card"><h2>Ризик-профіль клієнта</h2>';
+  h += '<p><strong>Клієнт:</strong> ' + esc(name) + '<br><strong>ЄДРПОУ / РНОКПП:</strong> ' + esc(code) + '<br><strong>Дата оцінки:</strong> ' + date + '</p>';
+  h += '<p><strong>Рівень ризику:</strong> <span class="level ' + r.level + '">' + r.label + '</span></p>';
+  h += '<h3>Чому</h3><ul>' + r.reasons.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  h += '<h3>Що робити</h3><ul>' + r.measures.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  h += '<h3>Відповіді</h3><ol class="small">' + RISK_QUESTIONS.map(q => '<li>' + esc(q.q) + ' — <strong>' + (ans[q.id] ? 'так' : 'ні') + '</strong></li>').join('') + '</ol>';
+  h += '<p class="small muted">Оцінку склав(ла): ____________________ Підпис: __________<br>Підготовлено інструментом «Перевірик» (орієнтовні критерії за Законом № 361-IX і Положенням Мінфіну № 282). Остаточне рішення ухвалює суб’єкт фінмоніторингу. Зберігати щонайменше 5 років після завершення співпраці.</p></div>';
+  h += '<div class="row noprint" style="margin-top:16px"><button class="btn" onclick="print()">Друк / зберегти PDF</button><button class="btn ghost" onclick="location.reload()">Новий клієнт</button></div>';
+  h += '<p class="small muted noprint">Автоперевірка в санкційному списку РНБО і ЄДР за кодом та архів профілів на 5 років — у тарифі «Соло». <a class="js-mail2" href="#">Хочу першим</a>.</p>';
+  out.innerHTML = h; out.classList.remove('hidden');
+  const m = document.querySelector('.js-mail2'); m.className = 'js-mail'; m.dataset.plan = 'Соло';
+  document.dispatchEvent(new Event('pv:mail'));
+  out.scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+<script src="contact.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+/* Перевірик (Pereviryk) — дизайн-токени. Згенеровано brand/src/tokens.py з palette.py, не редагуй вручну. */
+:root {
+  color-scheme: light dark;
+  --pv-primary: #0E5C57;
+  --pv-primary-strong: #0A4743;
+  --pv-primary-soft: #E3F0EE;
+  --pv-accent: #F2A541;
+  --pv-accent-strong: #9A5B00;
+  --pv-on-primary: #FFFFFF;
+  --pv-on-accent: #1B2528;
+  --pv-bg: #F7F8F6;
+  --pv-surface: #FFFFFF;
+  --pv-line: #DCE3E1;
+  --pv-text: #1B2528;
+  --pv-text-muted: #55636A;
+  --pv-risk-low: #25704F;
+  --pv-risk-low-bg: #E4F2EA;
+  --pv-risk-mid: #8C5A10;
+  --pv-risk-mid-bg: #FBEFD9;
+  --pv-risk-high: #B83F37;
+  --pv-risk-high-bg: #FBE6E3;
+
+  /* типографіка: Inter (OFL), кирилиця */
+  --pv-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --pv-font-weight-regular: 400;
+  --pv-font-weight-medium: 500;
+  --pv-font-weight-semibold: 600;
+  --pv-text-xs: 0.8125rem;  /* 13 */
+  --pv-text-sm: 0.875rem;   /* 14 */
+  --pv-text-md: 1rem;       /* 16 — основний текст */
+  --pv-text-lg: 1.25rem;    /* 20 */
+  --pv-text-xl: 1.75rem;    /* 28 */
+  --pv-text-2xl: 2.5rem;    /* 40 — заголовок сайту */
+  --pv-leading: 1.5;
+  --pv-tracking-display: -0.012em;
+
+  /* форма */
+  --pv-radius-sm: 8px;
+  --pv-radius-md: 14px;
+  --pv-radius-lg: 20px;
+  --pv-radius-pill: 999px;
+  --pv-space-1: 4px; --pv-space-2: 8px; --pv-space-3: 12px; --pv-space-4: 16px; --pv-space-6: 24px; --pv-space-8: 32px;
+  --pv-shadow: 0 1px 2px rgb(16 24 28 / 6%), 0 4px 16px rgb(16 24 28 / 6%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --pv-primary: #5CC2B8;
+    --pv-primary-strong: #86D6CD;
+    --pv-primary-soft: #17302E;
+    --pv-accent: #F2A541;
+    --pv-accent-strong: #F5B865;
+    --pv-on-primary: #0F1416;
+    --pv-on-accent: #1B2528;
+    --pv-bg: #0F1416;
+    --pv-surface: #172024;
+    --pv-line: #2A363B;
+    --pv-text: #E6ECEB;
+    --pv-text-muted: #9AA8AD;
+    --pv-risk-low: #6FCF9E;
+    --pv-risk-low-bg: #16291F;
+    --pv-risk-mid: #E6B35A;
+    --pv-risk-mid-bg: #2C2414;
+    --pv-risk-high: #F08A80;
+    --pv-risk-high-bg: #2F1A18;
+    --pv-shadow: none;
+  }
+}
+
+:root[data-theme="dark"] {
+  --pv-primary: #5CC2B8;
+  --pv-primary-strong: #86D6CD;
+  --pv-primary-soft: #17302E;
+  --pv-accent: #F2A541;
+  --pv-accent-strong: #F5B865;
+  --pv-on-primary: #0F1416;
+  --pv-on-accent: #1B2528;
+  --pv-bg: #0F1416;
+  --pv-surface: #172024;
+  --pv-line: #2A363B;
+  --pv-text: #E6ECEB;
+  --pv-text-muted: #9AA8AD;
+  --pv-risk-low: #6FCF9E;
+  --pv-risk-low-bg: #16291F;
+  --pv-risk-mid: #E6B35A;
+  --pv-risk-mid-bg: #2C2414;
+  --pv-risk-high: #F08A80;
+  --pv-risk-high-bg: #2F1A18;
+  --pv-shadow: none;
+}
